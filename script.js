@@ -1,8 +1,5 @@
 $(function(){
-
-$(".card").click(function(event) {
-    console.log($(event.target).data());
-});
-
+	$(".card").click(function(event) {
+	    console.log($(event.target).data());
+	});
 })
-
