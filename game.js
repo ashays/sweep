@@ -4,10 +4,28 @@ var PSCards = [];
 var stagePiles = [];
 var tempStage = [];
 
-for (i = 1; i <= 4; i++) {
-	for (j = 1; j <= 13; j++) {
-		var card = {rank: j, suit: i};
-		deck[13 * (i - 1) + j - 1] = card;		
+function getStagePiles() {
+	return stagePiles;
+}
+
+function geDeck() {
+	return deck;
+}
+
+function getPFCards() {
+	return PFCards;
+}
+
+function getPSCards() {
+	return PSCards;
+}
+
+function createDeck() {
+	for (i = 1; i <= 4; i++) {
+		for (j = 1; j <= 13; j++) {
+			var card = {rank: j, suit: i};
+			deck[13 * (i - 1) + j - 1] = card;		
+		}
 	}
 }
 
@@ -36,8 +54,20 @@ function deal() {
 	}
 }
 
-function makeTempStage() {
-	
+function makeTempStage(selectedCard, arrayPiles) {
+	var numLockedpiles = 0;
+	for (var i = 0; i < arrayPiles.length; i++) {
+		if (arrayPiles[i].locked == true) {
+			numLockedpiles++;
+			var lockedPile = arrayPiles[i];
+		}
+	}
+	if (numLockedpiles > 1) {
+		return false;
+	}
+	if (lockedPile == 1) {
+
+	}
 }
 
 function firstTurn(selectedCard) {
