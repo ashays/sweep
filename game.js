@@ -4,7 +4,6 @@ var PSCards = [];
 var stagePiles = [];
 var tempStage = [];
 
-<<<<<<< HEAD
 function getStagePiles() {
 	return stagePiles;
 }
@@ -31,8 +30,6 @@ function createDeck() {
 }
 
 
-=======
->>>>>>> origin/master
 function deckShuffle()    {             
     for (var i = 0; i < 52; i++)    {
         var randomInt = Math.floor(Math.random() * 52);
@@ -45,8 +42,9 @@ function deckShuffle()    {
 }
 
 function deal() {
-	for (i = 0, ; i < 4; i++) {
-		var pile = {locked : false, value: deck[i].rank, cards: deck[i]};
+	for (i = 0; i < 4; i++) {
+		var cardsInPile = [deck[i]];
+		var pile = {locked : false, value: deck[i].rank, cards: cardsInPile};
 		stagePiles[i] = pile; 
 	}
 	for (i = 4; i < 28; i++) {
