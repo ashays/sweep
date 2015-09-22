@@ -28,6 +28,9 @@ $(function(){
 			$('#stage').append(cardEle(stagePiles[i].cards[0].rank, stagePiles[i].cards[0].suit));
 		}
 	}
+	for (var i = 0; i < 12; i++) {
+		$('#hand').append(cardEle(PFCards[i].rank, PFCards[i].suit));
+	}
 
 	$(".card").click(function(event) {
 	    console.log($(event.target).data());

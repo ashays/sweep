@@ -36,8 +36,6 @@ function deckShuffle()    {
         var temp = deck[i];
         deck[i] = deck[randomInt];
         deck[randomInt] = temp;
-        //deck.set(i, deck.get(randomInt));
-        //deck.set(randomInt, temp);
     }
 }
 
