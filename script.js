@@ -5,7 +5,7 @@ $(function(){
 	deal();
 
 	var cardEle = function(rank, suit) {
-		return '<div class="card" data-rank="' + rank + '" data-suit="' + suit + '">' + rank + ' of ' + suitName(suit) + '</div>';
+		return '<div class="card" data-rank="' + rank + '" data-suit="' + suit + '">' + rankName(rank) + ' of ' + suitName(suit) + '</div>';
 	}
 
 	var suitName = function(suitNum) {
@@ -13,6 +13,14 @@ $(function(){
 		else if (suitNum == 2) { return "Hearts"; }
 		else if (suitNum == 3) { return "Diamonds"; }
 		else if (suitNum == 4) { return "Clubs"; }
+	}
+
+	var rankName = function(rankVal) {
+		if (rankVal == 1) { return "A"; }
+		else if (rankVal == 11) { return "J"; }
+		else if (rankVal == 12) { return "Q"; }
+		else if (rankVal == 13) { return "K"; }
+		else { return rankVal; }
 	}
 
 	for (var i = 0; i < stagePiles.length; i++) {
