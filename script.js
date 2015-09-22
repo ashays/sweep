@@ -5,15 +5,11 @@ $(function(){
 	deal();
 
 	var cardEle = function(rank, suit) {
-		return '<div class="card" data-rank="' + rank + '" data-suit="' + suit + '">' + rankName(rank) + ' of ' + suitName(suit) + '</div>';
+		return '<div class="card ' + suitName[suit] + '" data-rank="' + rank + '" data-suit="' + suit + '">' + rankName(rank) + ' ' + suitFigure[suit] + '</div>';
 	}
 
-	var suitName = function(suitNum) {
-		if (suitNum == 1) { return "Spades"; }
-		else if (suitNum == 2) { return "Hearts"; }
-		else if (suitNum == 3) { return "Diamonds"; }
-		else if (suitNum == 4) { return "Clubs"; }
-	}
+	var suitName = [null, "spades", "hearts", "diamonds", "clubs"];
+	var suitFigure = [null, "&spades;", "&hearts;", "&diams;", "&clubs;"];
 
 	var rankName = function(rankVal) {
 		if (rankVal == 1) { return "A"; }
