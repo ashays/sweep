@@ -3,6 +3,7 @@ var PFCards = [];
 var PSCards = [];
 var stagePiles = [];
 var tempStage = [];
+var topCard = 0;
 
 function getStagePiles() {
 	return stagePiles;
@@ -39,18 +40,28 @@ function deckShuffle()    {
     }
 }
 
-function deal() {
+function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
 		var pile = {locked : false, value: deck[i].rank, cards: cardsInPile};
 		stagePiles[i] = pile; 
 	}
-	for (i = 4; i < 28; i++) {
+	topCard = 4;
+	for (i = topCard; i < 8; i++) {
 		PFCards[i - 4] = deck[i];
 	}
-	for (i = 28; i < 52; i++) {
-		PSCards[i - 28] = deck[i];
+	topCard = 8;
+}
+
+function deal(firstHalf) {
+	for (i = topCard; i < (firstHalf ? topCard + 8 : topCard + 12); i++) {
+		PFCards[i - (firstHalf ? 4 : topCard)] = deck[i];
 	}
+	topCard = i;
+	for (i = topCard; i < topCard + 12; i++) {
+		PSCards[i - topCard] = deck[i];
+	}
+	topCard = i;
 }
 
 function makeTempStage(selectedCard, arrayPiles) {
@@ -70,12 +81,13 @@ function makeTempStage(selectedCard, arrayPiles) {
 }
 
 function firstTurn(selectedCard) {
-
+	//call normal turn method
+	//check if pile they made is selectedCard.rank
 }
 
-function containsHighCard() {
-	for (var i = 0; i < 4; i++) {
-		if (PFCards[i].rank >= 9) {
+function containsHighCard(cards) {
+	for (var i = 0; i < cards.length; i++) {
+		return (cards[i].rank >= 9) {
 			return true;
 		}
 	}
