@@ -3,7 +3,7 @@ $(function(){
 	createDeck();
 	do {
 		deckShuffle();
-		deal();
+		initialDeal();
 		console.log(PFCards[0].rank + " " + PFCards[1].rank + " " + PFCards[2].rank + " " + PFCards[3].rank);
 	} while (!containsHighCard(PFCards))
 
@@ -47,7 +47,7 @@ function showCards() {
 		}
 	}
 	$('#hand').empty();
-	for (var i = 0; i < 12; i++) {
+	for (var i = 0; i < PFCards.length; i++) {
 		$('#hand').append(cardEle(PFCards[i].rank, PFCards[i].suit, i));
 	}
 }

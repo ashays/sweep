@@ -18,7 +18,7 @@ body {
     text-align: center;
     line-height: 75px;
     margin: 0 5px;
-    box-shadow: 1px 1px 5px #555;
+    box-shadow: 1px 1px 3px #555;
     cursor: pointer;
     border-radius: 3px;
     transition: box-shadow .3s;
@@ -29,7 +29,7 @@ body {
 }
 
 .card:hover {
-    box-shadow: 2px 2px 5px #555;
+    box-shadow: 1px 1px 5px #555;
 }
 
 .card.selected {

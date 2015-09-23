@@ -87,7 +87,7 @@ function firstTurn(selectedCard) {
 
 function containsHighCard(cards) {
 	for (var i = 0; i < cards.length; i++) {
-		return (cards[i].rank >= 9) {
+		if (cards[i].rank >= 9) {
 			return true;
 		}
 	}
