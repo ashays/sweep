@@ -72,3 +72,12 @@ function makeTempStage(selectedCard, arrayPiles) {
 function firstTurn(selectedCard) {
 
 }
+
+function containsHighCard() {
+	for (var i = 0; i < 4; i++) {
+		if (PFCards[i].rank >= 9) {
+			return true;
+		}
+	}
+	return false;
+}

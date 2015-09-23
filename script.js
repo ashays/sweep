@@ -1,8 +1,11 @@
 $(function(){
 
 	createDeck();
-	deckShuffle();
-	deal();
+	do {
+		deckShuffle();
+		deal();
+		console.log(PFCards[0].rank + " " + PFCards[1].rank + " " + PFCards[2].rank + " " + PFCards[3].rank);
+	} while (!containsHighCard())
 
 	var cardEle = function(rank, suit) {
 		return '<div class="card ' + suitName[suit] + '" data-rank="' + rank + '" data-suit="' + suit + '">' + rankName(rank) + ' ' + suitFigure[suit] + '</div>';
