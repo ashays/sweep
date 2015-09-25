@@ -8,6 +8,10 @@ $(function(){
 	} while (!containsHighCard(PFCards))
 
 	showCards();
+	$('#stage').hide();
+	//After select, check if isHighCard
+	//If is high card, show stage cards,
+	//Then continue like normal level play
 
 	$(".card").click(function(event) {
 	    console.log($(event.target).data());
