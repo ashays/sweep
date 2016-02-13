@@ -106,7 +106,7 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 		return false
 	if (!pickUp)
 		makePile(handCard, selectedPiles);
-	if (!pickUpPile(handCard, selectedPiles)) 
+	else if (!pickUpPile(handCard, selectedPiles)) 
 		return false;
 
 	turn++;
@@ -152,7 +152,7 @@ function pickUpPile(handCard, selectedPiles) {
 		return false;
 	for (i=0; i<selectedPiles.length; i++) {
 		stagePiles.splice(selectedPiles[i], 1);
-	
+	}
 }
 
 function containsHighCard(cards) {
