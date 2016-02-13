@@ -58,11 +58,11 @@ function initialDeal() {
 
 function deal(firstHalf) {
 	for (i = topCard; i < (firstHalf ? topCard + 8 : topCard + 12); i++) {
-		PFCards[i - (firstHalf ? 4 : topCard)] = deck[i];
+		PFCards.push(deck[i]);
 	}
 	topCard = i;
 	for (i = topCard; i < topCard + 12; i++) {
-		PSCards[i - topCard] = deck[i];
+		PSCards.push(deck[i]);
 	}
 	topCard = i;
 }
