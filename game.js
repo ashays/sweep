@@ -58,11 +58,11 @@ function initialDeal() {
 
 function deal(firstHalf) {
 	for (i = topCard; i < (firstHalf ? topCard + 8 : topCard + 12); i++) {
-		PFCards[i - (firstHalf ? 4 : topCard)] = deck[i];
+		PFCards.push(deck[i]);
 	}
 	topCard = i;
 	for (i = topCard; i < topCard + 12; i++) {
-		PSCards[i - topCard] = deck[i];
+		PSCards.push(deck[i]);
 	}
 	topCard = i;
 }
@@ -115,6 +115,33 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 	PFCards.splice(selectedCard, 1);
 
 	deal(true);
+	return true;
+}
+
+function anyTurn(selectedCard, selectedPiles, pickUp) {
+	var player1turn = turn%2 == 1;
+	var handCard = player1turn ? PFCards[selectedCard] : PSCards[selectedCard];
+	/*var sumOfCards = 0;
+	for (i = 0; i < selectedPiles.length; i++){
+		sumOfCards += stagePiles[selectedPiles[i]].rankValue;
+	}
+
+	sumOfCards += handCard.rank;*/
+	if (!pickUp) {
+		//if (sumOfCards != PFCards[targetRankIndex].rank)
+			//return false
+		makePile(handCard, selectedPiles);
+	}
+	else if (!pickUpPile(handCard, selectedPiles)) {
+		return false;
+	}
+
+	turn++;
+	player1turn ? PFCards.splice(selectedCard, 1) : PSCards.splice(selectedCard, 1);
+
+	if (PFCards.length == 0 && PSCards.length == 0)
+		deal(false);
+	
 	return true;
 }
 
