@@ -106,12 +106,13 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 		return false
 	if (!pickUp)
 		makePile(handCard, selectedPiles);
-	if (pickUp) 
-		pickUpPile(handCard, selectedPiles);
+	if (!pickUpPile(handCard, selectedPiles)) 
+		return false;
 
 	turn++;
 	PFCards.splice(selectedCard, 1);
 
+	deal(true);
 	return true;
 }
 
@@ -147,7 +148,11 @@ function pickUpPile(handCard, selectedPiles) {
 	for (i = 0; i < selectedPiles.length; i++){
 		sumOfCards += stagePiles[selectedPiles[i]].rankValue;
 	}
-
+	if (handCard.rank != sumOfCards)
+		return false;
+	for (i=0; i<selectedPiles.length; i++) {
+		stagePiles.splice(selectedPiles[i], 1);
+	
 }
 
 function containsHighCard(cards) {
