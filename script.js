@@ -20,8 +20,7 @@ $(function(){
 		} else {
 			$(event.target).toggleClass("selected");
 		}
-		if (firstTurnSelectedCard < 0) {
-			// and if first turn
+		if (turn == 1 && firstTurnSelectedCard < 0) {
 			if (PFCards[$(event.target).data().index].rank >= 9) {
 				$('#selectBtn').show();
 			} else {
@@ -91,13 +90,22 @@ function showCards() {
 function submitMove(pickUpPileBool) {
 	console.log("selected piles: " + selectedPiles());
 	console.log("first selected target index: " + firstTurnSelectedCard);
-	// if first turn
-	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
-		console.log("it worked");
-		showCards();
+	if (turn == 1) {
+		if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
+			console.log("it worked");
+			showCards();
+		} else {
+			console.log("it didn't work");
+			alert('something went wrong. try again');
+		}		
 	} else {
-		console.log("it didn't work");
-		alert('something went wrong. try again');
+		if (turn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
+			console.log("it worked");
+			showCards();
+		} else {
+			console.log("it didn't work");
+			alert('something went wrong. try again');
+		}
 	}
 }
 
