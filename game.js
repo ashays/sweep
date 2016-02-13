@@ -1,9 +1,12 @@
 var deck = [];
 var PFCards = [];
 var PSCards = [];
+var PFpoints = 0;
+var PSpoints = 0;
 var stagePiles = [];
 var tempStage = [];
 var topCard = 0;
+var turn = 1;
 
 function getStagePiles() {
 	return stagePiles;
@@ -43,7 +46,7 @@ function deckShuffle()    {
 function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
-		var pile = {locked : false, value: deck[i].rank, cards: cardsInPile};
+		var pile = {locked : false, rankValue: deck[i].rank, cards: cardsInPile};
 		stagePiles[i] = pile; 
 	}
 	topCard = 4;
@@ -64,6 +67,7 @@ function deal(firstHalf) {
 	topCard = i;
 }
 
+
 function makeTempStage(selectedCard, arrayPiles) {
 	var numLockedpiles = 0;
 	for (var i = 0; i < arrayPiles.length; i++) {
@@ -80,9 +84,57 @@ function makeTempStage(selectedCard, arrayPiles) {
 	}
 }
 
-function firstTurn(selectedCard) {
+/*
+SelectedCard = index of card selected inside your hand
+targetRank = rank needed to reach in terms of first selection (1stTurn)
+selectedPiles = array of indices of selected piles from stagePiles[]
+pickUp = boolean for whether you're picking up or putting down
+*/
+function firstTurn(selectedCard, targetRank, selectedPiles, pickUp) {
 	//call normal turn method
 	//check if pile they made is selectedCard.rank
+	var handCard = PFCards[selectedCard];
+	var arrayPiles = [];
+	var sumOfCards = 0;
+	for (i = 0; i < selectedPiles.length; i++){
+		arrayPiles[i] = stagePiles[selectedPiles[i]];
+		sumOfCards += arrayPiles[i].rankValue;
+	}
+
+	sumOfCards += handCard.rank;
+	if (sumOfCards != targetRank)
+		return false
+	if (!pickUp)
+		makePile(handCard, selectedPiles);
+	else pickUpPile(handCard, selectedPiles);
+
+	turn++;
+	return true;
+}
+
+function makePile(handCard, selectedPiles) {
+	if (selectedPiles.length == 0) {
+		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard]};
+		stagePiles.push(newPile);
+		return;
+	}
+
+	var destinationPile = selectedPiles[0];
+	for (i=1; i<selectedPiles.length; i++) {
+		currentPile = stagePiles[selectedPiles[i]];
+
+		if (!stagePiles[destinationPile].locked)
+			stagePiles[destinationPile].rankValue = currentPile.locked ? currentPile.rankValue : 
+				stagePiles[destinationPile].rankValue + currentPile.rankValue;
+		
+		for (j=0; j < currentPile.cards.length; j++) {
+			stagePiles[destinationPile].cards.push(currentPile.cards[j]);
+		}
+	}
+	for (i=1; i<selectedPiles.length; i++) {
+		stagePiles.splice(selectedPiles[i], 1);
+	}
+	stagePiles[destinationPile].cards.push(handCard);
 }
 
 function containsHighCard(cards) {
