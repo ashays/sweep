@@ -118,6 +118,33 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 	return true;
 }
 
+function anyTurn(selectedCard, selectedPiles, pickUp) {
+	var player1turn = turn%2 == 1;
+	var handCard = player1turn ? PFCards[selectedCard] : PSCards[selectedCard];
+	/*var sumOfCards = 0;
+	for (i = 0; i < selectedPiles.length; i++){
+		sumOfCards += stagePiles[selectedPiles[i]].rankValue;
+	}
+
+	sumOfCards += handCard.rank;*/
+	if (!pickUp) {
+		//if (sumOfCards != PFCards[targetRankIndex].rank)
+			//return false
+		makePile(handCard, selectedPiles);
+	}
+	else if (!pickUpPile(handCard, selectedPiles)) {
+		return false;
+	}
+
+	turn++;
+	player1turn ? PFCards.splice(selectedCard, 1) : PSCards.splice(selectedCard, 1);
+
+	if (PFCards.length == 0 && PSCards.length == 0)
+		deal(false);
+	
+	return true;
+}
+
 function makePile(handCard, selectedPiles) {
 	if (selectedPiles.length == 0) {
 		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard]};
