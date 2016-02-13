@@ -88,22 +88,11 @@ function showCards() {
 	}
 }
 
-function makePileBtn() {
+function submitMove(pickUpPileBool) {
 	console.log("selected piles: " + selectedPiles());
 	console.log("first selected target index: " + firstTurnSelectedCard);
 	// if first turn
-	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false)) {
-		console.log("it worked");
-		showCards();
-	} else {
-		console.log("it didn't work");
-		alert('something went wrong. try again');
-	}
-}
-
-function pickUpPileBtn() {
-	console.log(selectedPiles());
-	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), true)) {
+	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
 		console.log("it worked");
 		showCards();
 	} else {
