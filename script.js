@@ -28,11 +28,10 @@ $(function(){
 				$('#selectBtn').hide();
 			}
 		} else {
-			if ($('#hand .selected')) {
-				$('#pileBtn').show();
+			$('#pileBtn').show();			
+			if ($('#stage .selected').length) {
 				$('#pickBtn').show();
 			} else {
-				$('#pileBtn').hide();
 				$('#pickBtn').hide();
 			}
 		}
@@ -59,6 +58,10 @@ var cardEle = function(rank, suit, index) {
 	return '<div class="card ' + suitName[suit] + '" data-index="' + index + '">' + rankName(rank) + ' ' + suitFigure[suit] + '</div>';
 }
 
+var pileEle = function(rank, index) {
+	return '<div class="card" data-index="' + index + '">' + rankName(rank) + '</div>';
+}
+
 var suitName = [null, "spades", "hearts", "diamonds", "clubs"];
 var suitFigure = [null, "&spades;", "&hearts;", "&diams;", "&clubs;"];
 
@@ -75,6 +78,8 @@ function showCards() {
 	for (var i = 0; i < stagePiles.length; i++) {
 		if (stagePiles[i].cards.length == 1) {
 			$('#stage').append(cardEle(stagePiles[i].cards[0].rank, stagePiles[i].cards[0].suit, i));
+		} else {
+			$('#stage').append(pileEle(stagePiles[i].rankValue, i));
 		}
 	}
 	$('#hand').empty();
