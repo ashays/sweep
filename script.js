@@ -17,6 +17,7 @@ $(function(){
 		if ($(event.target).parent('#hand').length) {
 			$('#hand .selected').removeClass("selected");
 			$(event.target).addClass("selected");
+
 		} else {
 			$(event.target).toggleClass("selected");
 		}
@@ -26,8 +27,8 @@ $(function(){
 			} else {
 				$('#selectBtn').hide();
 			}
-		} else {
-			$('#pileBtn').show();			
+		} else if ($(event.target).parent('#hand').length) {
+			$('#pileBtn').show();
 			if ($('#stage .selected').length) {
 				$('#pickBtn').show();
 			} else {
