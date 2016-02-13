@@ -86,11 +86,11 @@ function makeTempStage(selectedCard, arrayPiles) {
 
 /*
 SelectedCard = index of card selected inside your hand
-targetRank = rank needed to reach in terms of first selection (1stTurn)
+targetRankIndex = index of card rank needed to reach in terms of first selection (1stTurn)
 selectedPiles = array of indices of selected piles from stagePiles[]
 pickUp = boolean for whether you're picking up or putting down
 */
-function firstTurn(selectedCard, targetRank, selectedPiles, pickUp) {
+function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 	//call normal turn method
 	//check if pile they made is selectedCard.rank
 	var handCard = PFCards[selectedCard];
@@ -102,7 +102,7 @@ function firstTurn(selectedCard, targetRank, selectedPiles, pickUp) {
 	}
 
 	sumOfCards += handCard.rank;
-	if (sumOfCards != targetRank)
+	if (sumOfCards != PFCards[targetRankIndex].rank)
 		return false
 	if (!pickUp)
 		makePile(handCard, selectedPiles);
