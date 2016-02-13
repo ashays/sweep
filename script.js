@@ -1,4 +1,4 @@
-var firstTurnSelectedCard;
+var firstTurnSelectedCard = -1;
 
 $(function(){
 	createDeck();
@@ -20,7 +20,7 @@ $(function(){
 		} else {
 			$(event.target).toggleClass("selected");
 		}
-		if (! firstTurnSelectedCard) {
+		if (firstTurnSelectedCard < 0) {
 			// and if first turn
 			if (PFCards[$(event.target).data().index].rank >= 9) {
 				$('#selectBtn').show();
@@ -84,15 +84,14 @@ function showCards() {
 }
 
 function makePile() {
+	console.log("selected piles: " + selectedPiles());
+	console.log("first selected target index: " + firstTurnSelectedCard);
 	// if first turn
-	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false)) {
-		console.log("it worked");
-	} else {
-		console.log("it didn't work");
-	}
+	console.log(firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false));
 }
 
 function pickUpPile() {
+	console.log(selectedPiles());
 	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), true)) {
 		console.log("it worked");
 		showCards();
