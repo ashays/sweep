@@ -34,7 +34,7 @@ var cardEle = function(rank, suit, index) {
 }
 
 var pileEle = function(rank, index) {
-	return '<div class="card" data-index="' + index + '">' + rankName(rank) + '</div>';
+	return '<div class="card" data-index="' + index + '" onclick="clickCard(event)">' + rankName(rank) + '</div>';
 }
 
 var suitName = [null, "spades", "hearts", "diamonds", "clubs"];
@@ -49,6 +49,7 @@ var rankName = function(rankVal) {
 }
 
 function showCards() {
+	console.log("Player " + turn % 2 + "'s turn");
 	$('#stage').empty();
 	for (var i = 0; i < stagePiles.length; i++) {
 		if (stagePiles[i].cards.length == 1) {
@@ -71,8 +72,8 @@ function showCards() {
 }
 
 function submitMove(pickUpPileBool) {
-	console.log("selected piles: " + selectedPiles());
-	console.log("first selected target index: " + firstTurnSelectedCard);
+	// console.log("selected piles: " + selectedPiles());
+	// console.log("first selected target index: " + firstTurnSelectedCard);
 	if (turn == 1) {
 		if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
 			console.log("it worked");
