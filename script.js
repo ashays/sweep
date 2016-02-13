@@ -1,5 +1,6 @@
-$(function(){
+var firstTurnSelectedCard;
 
+$(function(){
 	createDeck();
 	do {
 		deckShuffle();
@@ -8,10 +9,8 @@ $(function(){
 	} while (!containsHighCard(PFCards))
 
 	showCards();
+	$('.button').hide();
 	$('#stage').hide();
-	//After select, check if isHighCard
-	//If is high card, show stage cards,
-	//Then continue like normal level play
 
 	$(".card").click(function(event) {
 	    console.log($(event.target).data());
@@ -21,11 +20,39 @@ $(function(){
 		} else {
 			$(event.target).toggleClass("selected");
 		}
+		if (! firstTurnSelectedCard) {
+			// and if first turn
+			if (PFCards[$(event.target).data().index].rank >= 9) {
+				$('#selectBtn').show();
+			} else {
+				$('#selectBtn').hide();
+			}
+		} else {
+			if ($('#hand .selected')) {
+				$('#pileBtn').show();
+				$('#pickBtn').show();
+			} else {
+				$('#pileBtn').hide();
+				$('#pickBtn').hide();
+			}
+		}
 	});
 
 	$('#selectBtn').click(function(event) {
-		turn($($('#hand .selected')).data().index, selectedPiles());
+		// Check if a card is selected
+		if (! $('#hand .selected') || PFCards[$('#hand .selected').data().index].rank < 9) {
+			console.log('ERROR');
+		} else {
+			firstTurnSelectedCard = $('#hand .selected').data().index;
+			$('#stage').show();
+			$('#hand .selected').removeClass("selected");
+			$('#selectBtn').hide();
+			console.log(firstTurnSelectedCard);
+		}
 	});
+	//If is high card, show stage cards,
+	//Then continue like normal level play
+
 })
 
 var cardEle = function(rank, suit, index) {
@@ -53,6 +80,25 @@ function showCards() {
 	$('#hand').empty();
 	for (var i = 0; i < PFCards.length; i++) {
 		$('#hand').append(cardEle(PFCards[i].rank, PFCards[i].suit, i));
+	}
+}
+
+function makePile() {
+	// if first turn
+	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false)) {
+		console.log("it worked");
+	} else {
+		console.log("it didn't work");
+	}
+}
+
+function pickUpPile() {
+	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), true)) {
+		console.log("it worked");
+		showCards();
+	} else {
+		console.log("it didn't work");
+		alert('something went wrong. try again');
 	}
 }
 
