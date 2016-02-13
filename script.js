@@ -1,6 +1,6 @@
 var firstTurnSelectedCard = -1;
 
-$(function(){
+$(document).ready(function() {
 	createDeck();
 	do {
 		deckShuffle();
@@ -11,31 +11,6 @@ $(function(){
 	showCards();
 	$('.button').hide();
 	$('#stage').hide();
-
-	$(".card").click(function(event) {
-	    console.log($(event.target).data());
-		if ($(event.target).parent('#hand').length) {
-			$('#hand .selected').removeClass("selected");
-			$(event.target).addClass("selected");
-
-		} else {
-			$(event.target).toggleClass("selected");
-		}
-		if (turn == 1 && firstTurnSelectedCard < 0) {
-			if (PFCards[$(event.target).data().index].rank >= 9) {
-				$('#selectBtn').show();
-			} else {
-				$('#selectBtn').hide();
-			}
-		} else if ($(event.target).parent('#hand').length) {
-			$('#pileBtn').show();
-			if ($('#stage .selected').length) {
-				$('#pickBtn').show();
-			} else {
-				$('#pickBtn').hide();
-			}
-		}
-	});
 
 	$('#selectBtn').click(function(event) {
 		// Check if a card is selected
@@ -55,7 +30,7 @@ $(function(){
 })
 
 var cardEle = function(rank, suit, index) {
-	return '<div class="card ' + suitName[suit] + '" data-index="' + index + '">' + rankName(rank) + ' ' + suitFigure[suit] + '</div>';
+	return '<div class="card ' + suitName[suit] + '" data-index="' + index + '" onclick="clickCard(event)">' + rankName(rank) + ' ' + suitFigure[suit] + '</div>';
 }
 
 var pileEle = function(rank, index) {
@@ -83,8 +58,15 @@ function showCards() {
 		}
 	}
 	$('#hand').empty();
-	for (var i = 0; i < PFCards.length; i++) {
-		$('#hand').append(cardEle(PFCards[i].rank, PFCards[i].suit, i));
+	if (turn % 2 == 1) {
+		// Player 1's turn
+		for (var i = 0; i < PFCards.length; i++) {
+			$('#hand').append(cardEle(PFCards[i].rank, PFCards[i].suit, i));
+		}
+	} else {
+		for (var i = 0; i < PSCards.length; i++) {
+			$('#hand').append(cardEle(PSCards[i].rank, PSCards[i].suit, i));
+		}
 	}
 }
 
@@ -94,18 +76,47 @@ function submitMove(pickUpPileBool) {
 	if (turn == 1) {
 		if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
 			console.log("it worked");
+			$('.selected').removeClass("selected");
+			$('.button').hide();
 			showCards();
 		} else {
 			console.log("it didn't work");
 			alert('something went wrong. try again');
 		}		
 	} else {
-		if (turn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
+		if (anyTurn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
 			console.log("it worked");
+			$('.selected').removeClass("selected");
+			$('.button').hide();
 			showCards();
 		} else {
 			console.log("it didn't work");
 			alert('something went wrong. try again');
+		}
+	}
+}
+
+function clickCard(event) {
+    console.log($(event.target).data());
+	if ($(event.target).parent('#hand').length) {
+		$('#hand .selected').removeClass("selected");
+		$(event.target).addClass("selected");
+
+	} else {
+		$(event.target).toggleClass("selected");
+	}
+	if (turn == 1 && firstTurnSelectedCard < 0) {
+		if (PFCards[$(event.target).data().index].rank >= 9) {
+			$('#selectBtn').show();
+		} else {
+			$('#selectBtn').hide();
+		}
+	} else if ($('#hand .selected').length) {
+		$('#pileBtn').show();
+		if ($('#stage .selected').length) {
+			$('#pickBtn').show();
+		} else {
+			$('#pickBtn').hide();
 		}
 	}
 }
