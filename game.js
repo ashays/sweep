@@ -106,7 +106,8 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 		return false
 	if (!pickUp)
 		makePile(handCard, selectedPiles);
-	else pickUpPile(handCard, selectedPiles);
+	if (pickUp) 
+		pickUpPile(handCard, selectedPiles);
 
 	turn++;
 	return true;
