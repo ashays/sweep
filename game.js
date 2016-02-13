@@ -12,7 +12,7 @@ function getStagePiles() {
 	return stagePiles;
 }
 
-function geDeck() {
+function getDeck() {
 	return deck;
 }
 
@@ -46,7 +46,7 @@ function deckShuffle()    {
 function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
-		var pile = {locked : false, rankValue: deck[i].rank, cards: cardsInPile};
+		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile};
 		stagePiles[i] = pile; 
 	}
 	topCard = 4;
@@ -141,7 +141,7 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 
 	if (PFCards.length == 0 && PSCards.length == 0)
 		deal(false);
-	
+
 	return true;
 }
 
@@ -152,9 +152,73 @@ function makePile(handCard, selectedPiles) {
 		return 0;
 	}
 
+	var pileRank = 0;
+	var unlockedPiles = {locked : false, rankValue : 0, cards: []};
+	var lockedPiles = {locked: true, rankValue: 0, cards: []};
+	for (i=0; i < selectedPiles.length; i++) {
+		var currentPile = stagePiles[selectedPiles[i]];
+
+		if (!currentPile.locked) {		//Add all unlocked piles into one
+			unlockedPiles.rankValue += currentPile.rankValue;
+			unlockedPiles.cards = unlockedPiles.cards.concat(currentPile.cards);
+		} else {
+			if (lockedPiles.cards.length == 0) {
+				lockedPiles = currentPile;
+			} else {
+				if (lockedPiles.rankValue != currentPile.rankValue)
+					return false;
+				lockedPiles.cards = lockedPiles.cards.concat(currentPile.cards);
+			}
+		}
+
+	unlockedPiles.cards.push(handCard);
+	unlockedPiles.rankValue += handCard.rank;
+
+	if (lockedPiles.cards.length != 0)
+		pileRank = lockedPiles.rankValue;
+	}
+	for (i=9; i<=13; i++) {
+		if (unlockedPiles.rankValue % i == 0) {
+			if (i > 13)
+				unlockedPiles.locked = true;
+			unlockedPiles.rankValue = i;
+			break;
+		}
+		if (i==13)
+			return false;
+	}
+
+	if (pileRank == 0) {
+		pileRank = unlockedPiles.rankValue;
+	} else if (pileRank != unlockedPiles.rankValue) {
+		return false;
+	}
+
+	var playerCards = turn % 2 == 1? PFCards : PSCards;
+	var count = 0;
+	for (i=0; i < playerCards.length; i++) {
+		if (playerCards[i].rank == pileRank)
+			count++;
+	}
+
+	if (pileRank == handCard.rank && count < 2)
+		return false;
+
+	if (pileRank != handCard.rank && count < 1)
+		return false;
+
+
+
+	if (lockedPiles.length != 0) {
+		var finalPile = lockedPiles.cards.concat(unlockedPiles.cards);
+	} else {
+		var finalPile = unlockedPiles;
+	}
+
+
 	var destinationPile = selectedPiles[0];
-	for (i=1; i<selectedPiles.length; i++) {
-		currentPile = stagePiles[selectedPiles[i]];
+	/*for (i=1; i<selectedPiles.length; i++) {
+		var currentPile = stagePiles[selectedPiles[i]];
 
 		if (!stagePiles[destinationPile].locked)
 			stagePiles[destinationPile].rankValue = currentPile.locked ? currentPile.rankValue : 
@@ -163,13 +227,15 @@ function makePile(handCard, selectedPiles) {
 		for (j=0; j < currentPile.cards.length; j++) {
 			stagePiles[destinationPile].cards.push(currentPile.cards[j]);
 		}
-	}
+	}*/
 	for (i=1; i<selectedPiles.length; i++) {
 		stagePiles.splice(selectedPiles[i], 1);
 	}
-	stagePiles[destinationPile].cards.push(handCard);
+	/*stagePiles[destinationPile].cards.push(handCard);
 	if (stagePiles[destinationPile].rankValue != handCard.rank)
 		stagePiles[destinationPile].rankValue += handCard.rank;
+	*/
+	stagePiles[destinationPile] = finalPile;
 }
 
 function pickUpPile(handCard, selectedPiles) {
