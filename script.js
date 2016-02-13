@@ -83,14 +83,20 @@ function showCards() {
 	}
 }
 
-function makePile() {
+function makePileBtn() {
 	console.log("selected piles: " + selectedPiles());
 	console.log("first selected target index: " + firstTurnSelectedCard);
 	// if first turn
-	console.log(firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false));
+	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), false)) {
+		console.log("it worked");
+		showCards();
+	} else {
+		console.log("it didn't work");
+		alert('something went wrong. try again');
+	}
 }
 
-function pickUpPile() {
+function pickUpPileBtn() {
 	console.log(selectedPiles());
 	if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), true)) {
 		console.log("it worked");
