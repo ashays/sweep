@@ -115,6 +115,8 @@ body {
     z-index: 99;
     opacity: .8;
     transition: all .3s;
+    padding: 30px 5px;
+    line-height: normal;
 }
 
 .pile:hover .label {
@@ -131,5 +133,12 @@ body {
 .pile.selected .label {
     top: -10px;
     opacity: 1;
+}
+
+.pile .label span {
+    display: block;
+    font-size: 12px;
+    margin: 5px 0;
+    opacity: .8;
 }
 

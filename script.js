@@ -38,7 +38,7 @@ var pileEle = function(rank, index) {
 	for (var i = 0; i < stagePiles[index].cards.length && i < 3; i++) {
 		pileCards += '<div class="card ' + suitName[stagePiles[index].cards[i].suit] + '" data-index="' + index + '" style="transform: rotate(' + Math.floor((Math.random() * 40) - 20) + 'deg);">' + rankName(stagePiles[index].cards[i].rank) + ' ' + suitFigure[stagePiles[index].cards[i].suit] + '</div>';
 	}
-	return '<div class="pile" data-index="' + index + '" onclick="clickPile(event)"><div class="card label">' + rankName(rank) + '</div>' + pileCards + '</div>';
+	return '<div class="pile" data-index="' + index + '" onclick="clickPile(event)"><div class="card label">' + rankName(rank) + '<span>+' + calculateScore(stagePiles[index].cards, false) + '</span></div>' + pileCards + '</div>';
 }
 
 var suitName = [null, "spades", "hearts", "diamonds", "clubs"];
