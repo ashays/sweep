@@ -3,10 +3,13 @@ var PFCards = [];
 var PSCards = [];
 var PFpoints = 0;
 var PSpoints = 0;
+var PFPile = [];
+var PSPile = [];
 var stagePiles = [];
 var tempStage = [];
 var topCard = 0;
 var turn = 1;
+var lastPickup = 0;
 
 function getStagePiles() {
 	return stagePiles;
@@ -46,7 +49,7 @@ function deckShuffle()    {
 function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
-		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile, score: calculateScore(this.cards, false)};
+		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile};
 		stagePiles[i] = pile; 
 	}
 	topCard = 4;
@@ -103,7 +106,7 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 
 	sumOfCards += handCard.rank;
 	if (!pickUp) {
-		if (sumOfCards != PFCards[targetRankIndex].rank)
+		if (sumOfCards % PFCards[targetRankIndex].rank != 0)
 			return false
 		makePile(handCard, selectedPiles);
 	}
@@ -148,14 +151,14 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 
 function makePile(handCard, selectedPiles) {
 	if (selectedPiles.length == 0) {
-		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard], score: calculateScore(this.cards, false)};
+		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard]};
 		stagePiles.push(newPile);
 		return true;
 	}
 
 	var pileRank = 0;
-	var unlockedPiles = {locked : false, rankValue : 0, cards: [], score: calculateScore(this.cards, false)};
-	var lockedPiles = {locked: true, rankValue: 0, cards: [], score: calculateScore(this.cards, false)};
+	var unlockedPiles = {locked : false, rankValue : 0, cards: []};
+	var lockedPiles = {locked: true, rankValue: 0, cards: []};
 	for (i=0; i < selectedPiles.length; i++) {
 		var currentPile = stagePiles[selectedPiles[i]];
 
@@ -176,13 +179,17 @@ function makePile(handCard, selectedPiles) {
 	unlockedPiles.cards.push(handCard);
 	unlockedPiles.rankValue += handCard.rank;
 
-
+	var highestCardRank = 0;
+	for (i=0; i < unlockedPiles.length; i++) {
+		if (unlockedPiles.cards[i].rank > highestCardRank)
+			highestCardRank = unlockedPiles.cards[i].rank;
+	}
 
 	if (lockedPiles.cards.length != 0)
 		pileRank = lockedPiles.rankValue;
 
 	for (i=9; i<=13; i++) {
-		if (unlockedPiles.rankValue % i == 0) {
+		if (unlockedPiles.rankValue % i == 0 && i>=highestCardRank && i>=pileRank) {
 			if (unlockedPiles.rankValue > 13)
 				unlockedPiles.locked = true;
 			unlockedPiles.rankValue = i;
@@ -242,7 +249,7 @@ function makePile(handCard, selectedPiles) {
 			stagePiles[destinationPile].cards.push(currentPile.cards[j]);
 		}
 	}*/
-	for (i=1; i<selectedPiles.length; i++) {
+	for (i=selectedPiles.length - 1; i > 0; i--) {
 		stagePiles.splice(selectedPiles[i], 1);
 	}
 	/*stagePiles[destinationPile].cards.push(handCard);
@@ -258,11 +265,45 @@ function pickUpPile(handCard, selectedPiles) {
 	for (i = 0; i < selectedPiles.length; i++){
 		sumOfCards += stagePiles[selectedPiles[i]].rankValue;
 	}
-	if (handCard.rank != sumOfCards)
+	var sum = 0;
+	var flag = false;
+	var sweep = false;
+	for (i = 0; i < selectedPiles.length; i++){
+		sum = stagePiles[selectedPiles[0]].rankValue;
+
+	}
+
+	if (sumOfCards > handCard.rank) {
+		if (sumOfCards % handCard.rank != 0)
+			return false;
+	} else if (sumOfCards < handCard.rank)
 		return false;
-	for (i=0; i<selectedPiles.length; i++) {
+
+
+	for (i=selectedPiles.length - 1; i>=0; i--) {
+		if (turn %2 == 1) {
+			PFPile = PFPile.concat(stagePiles[selectedPiles[i]].cards);
+		} else {
+			PSPile = PSPile.concat(stagePiles[selectedPiles[i]].cards);
+		}
 		stagePiles.splice(selectedPiles[i], 1);
 	}
+
+	if (stagePiles.length == 0)
+		sweep = true;
+
+	if (turn %2 == 1) {
+		lastPickup = 1;
+		if (sweep)
+			PFPile.push({rank: 50, suit: 1});
+		PFPile.push(handCard);
+	} else {
+		lastPickup = 2;
+		if (sweep)
+			PSPile.push({rank: 50, suit: 1});
+		PSPile.push(handCard);
+	}
+
 	return true;
 }
 
@@ -293,4 +334,17 @@ function calculateScore(cards, endgame) {
 		score += cards.length > 26 ? 4 : cards.length == 26 ? 2 : 0;
 	}
 	return score;
+}
+
+
+function endgame() {
+	if (lastPickup == 1) {
+		while (stagePiles.length != 0) {
+			PFPile = PFPile.concat(stagePiles[0].cards);
+			stagePiles.splice(0, 1);
+		}
+	} else while (stagePiles.length != 0) {
+		PSPile = PSPile.concat(stagePiles[0].cards);
+		stagePiles.splice(0, 1);
+	}
 }
