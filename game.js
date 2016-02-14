@@ -46,7 +46,7 @@ function deckShuffle()    {
 function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
-		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile};
+		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile, calculateScore(this.cards, false)};
 		stagePiles[i] = pile; 
 	}
 	topCard = 4;
@@ -130,7 +130,8 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 	if (!pickUp) {
 		//if (sumOfCards != PFCards[targetRankIndex].rank)
 			//return false
-		makePile(handCard, selectedPiles);
+		if (!makePile(handCard, selectedPiles))
+			return false;
 	}
 	else if (!pickUpPile(handCard, selectedPiles)) {
 		return false;
@@ -147,14 +148,14 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 
 function makePile(handCard, selectedPiles) {
 	if (selectedPiles.length == 0) {
-		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard]};
+		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard], calculateScore(this.cards, false)};
 		stagePiles.push(newPile);
-		return 0;
+		return true;
 	}
 
 	var pileRank = 0;
-	var unlockedPiles = {locked : false, rankValue : 0, cards: []};
-	var lockedPiles = {locked: true, rankValue: 0, cards: []};
+	var unlockedPiles = {locked : false, rankValue : 0, cards: [], calculateScore(this.cards, false)};
+	var lockedPiles = {locked: true, rankValue: 0, cards: [], calculateScore(this.cards, false)};
 	for (i=0; i < selectedPiles.length; i++) {
 		var currentPile = stagePiles[selectedPiles[i]];
 
@@ -170,16 +171,19 @@ function makePile(handCard, selectedPiles) {
 				lockedPiles.cards = lockedPiles.cards.concat(currentPile.cards);
 			}
 		}
+	}
 
 	unlockedPiles.cards.push(handCard);
 	unlockedPiles.rankValue += handCard.rank;
 
+
+
 	if (lockedPiles.cards.length != 0)
 		pileRank = lockedPiles.rankValue;
-	}
+
 	for (i=9; i<=13; i++) {
 		if (unlockedPiles.rankValue % i == 0) {
-			if (i > 13)
+			if (unlockedPiles.rankValue > 13)
 				unlockedPiles.locked = true;
 			unlockedPiles.rankValue = i;
 			break;
@@ -188,11 +192,15 @@ function makePile(handCard, selectedPiles) {
 			return false;
 	}
 
+	console.log("1unlocked piles rank value : " + unlockedPiles.rankValue);
 	if (pileRank == 0) {
 		pileRank = unlockedPiles.rankValue;
 	} else if (pileRank != unlockedPiles.rankValue) {
 		return false;
 	}
+
+	console.log("2unlocked piles rank value : " + unlockedPiles.rankValue);
+	console.log("2pile rank value : " + pileRank);
 
 	var playerCards = turn % 2 == 1? PFCards : PSCards;
 	var count = 0;
@@ -208,12 +216,18 @@ function makePile(handCard, selectedPiles) {
 		return false;
 
 
-
-	if (lockedPiles.length != 0) {
-		var finalPile = lockedPiles.cards.concat(unlockedPiles.cards);
+	var finalPile = lockedPiles;
+	if (lockedPiles.cards.length != 0) {
+		finalPile = lockedPiles;
+		lockedPiles.cards = lockedPiles.cards.concat(unlockedPiles.cards);
 	} else {
-		var finalPile = unlockedPiles;
+		finalPile = unlockedPiles;
+		console.log("THIS HAPPENED");
 	}
+
+	console.log("3unlocked piles rank value : " + unlockedPiles.rankValue);
+	console.log("3final piles rank value : " + finalPile.rankValue);
+	console.log("3pile rank value : " + pileRank);
 
 
 	var destinationPile = selectedPiles[0];
@@ -236,6 +250,7 @@ function makePile(handCard, selectedPiles) {
 		stagePiles[destinationPile].rankValue += handCard.rank;
 	*/
 	stagePiles[destinationPile] = finalPile;
+	return true;
 }
 
 function pickUpPile(handCard, selectedPiles) {
@@ -258,4 +273,21 @@ function containsHighCard(cards) {
 		}
 	}
 	return false;
+}
+
+function calculateScore(cards, endgame) {
+	var score = 0;
+	for (i=0; i < cards.length; i++) {
+		if (cards[i].suit == 1) {
+			score += cards[i].rank;
+		} else if (cards[i].suit == 3) {
+			score += cards[i].rank == 1 || cards[i].rank == 10 ? cards[i].rank : 0;
+		} else if (cards[i].rank == 1) {
+			score++;
+		}
+	}
+	if (endgame) {
+		score += cards.length > 26 ? 4 : cards.length == 26 ? 2 : 0;
+	}
+	return score;
 }
