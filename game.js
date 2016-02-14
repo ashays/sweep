@@ -57,6 +57,15 @@ function initialDeal() {
 		PFCards[i - 4] = deck[i];
 	}
 	topCard = 8;
+	PFCards.sort(sortByRank);
+}
+
+function sortByRank(a,b) {
+  if (a.rank < b.rank)
+     return -1;
+  if (a.rank > b.rank)
+    return 1;
+  return 0;
 }
 
 function deal(firstHalf) {
@@ -68,6 +77,8 @@ function deal(firstHalf) {
 		PSCards.push(deck[i]);
 	}
 	topCard = i;
+	PFCards.sort(sortByRank);
+	PSCards.sort(sortByRank);
 }
 
 
