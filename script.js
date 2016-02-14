@@ -24,9 +24,6 @@ $(document).ready(function() {
 			console.log(firstTurnSelectedCard);
 		}
 	});
-	//If is high card, show stage cards,
-	//Then continue like normal level play
-
 })
 
 var cardEle = function(rank, suit, index) {
@@ -86,8 +83,7 @@ function submitMove(pickUpPileBool) {
 		if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
 			nextPlayer();
 		} else {
-			console.log("it didn't work");
-			alert('something went wrong. try again');
+			sweetAlert("Oops...", errormessage, "error");
 		}		
 	} else {
 		if (anyTurn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
@@ -97,8 +93,7 @@ function submitMove(pickUpPileBool) {
 				gameOver();
 			}
 		} else {
-			console.log("it didn't work");
-			alert('something went wrong. try again');
+			sweetAlert("Oops...", errormessage, "error");
 		}
 	}
 }
