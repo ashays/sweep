@@ -34,7 +34,11 @@ var cardEle = function(rank, suit, index) {
 }
 
 var pileEle = function(rank, index) {
-	return '<div class="card" data-index="' + index + '" onclick="clickCard(event)">' + rankName(rank) + '</div>';
+	var pileCards = "";
+	for (var i = 0; i < stagePiles[index].cards.length && i < 3; i++) {
+		pileCards += '<div class="card ' + suitName[stagePiles[index].cards[i].suit] + '" data-index="' + index + '" style="transform: rotate(' + Math.floor((Math.random() * 40) - 20) + 'deg);">' + rankName(stagePiles[index].cards[i].rank) + ' ' + suitFigure[stagePiles[index].cards[i].suit] + '</div>';
+	}
+	return '<div class="pile" data-index="' + index + '" onclick="clickPile(event)"><div class="card label">' + rankName(rank) + '</div>' + pileCards + '</div>';
 }
 
 var suitName = [null, "spades", "hearts", "diamonds", "clubs"];
@@ -102,7 +106,6 @@ function clickCard(event) {
 	if ($(event.target).parent('#hand').length) {
 		$('#hand .selected').removeClass("selected");
 		$(event.target).addClass("selected");
-
 	} else {
 		$(event.target).toggleClass("selected");
 	}
@@ -115,6 +118,19 @@ function clickCard(event) {
 			$('#selectBtn').hide();
 		}
 	} else if ($('#hand .selected').length) {
+		$('#pileBtn').show();
+		if ($('#stage .selected').length) {
+			$('#pickBtn').show();
+		} else {
+			$('#pickBtn').hide();
+		}
+	}
+}
+
+function clickPile(event) {
+    console.log($(event.target).closest('.pile').data());
+	$(event.target).closest('.pile').toggleClass("selected");
+	if ($('#hand .selected').length) {
 		$('#pileBtn').show();
 		if ($('#stage .selected').length) {
 			$('#pickBtn').show();
