@@ -46,7 +46,7 @@ function deckShuffle()    {
 function initialDeal() {
 	for (i = 0; i < 4; i++) {
 		var cardsInPile = [deck[i]];
-		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile, calculateScore(this.cards, false)};
+		var pile = {locked : deck[i].rank == 13 ? true : false, rankValue: deck[i].rank, cards: cardsInPile, score: calculateScore(this.cards, false)};
 		stagePiles[i] = pile; 
 	}
 	topCard = 4;
@@ -148,14 +148,14 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 
 function makePile(handCard, selectedPiles) {
 	if (selectedPiles.length == 0) {
-		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard], calculateScore(this.cards, false)};
+		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard], score: calculateScore(this.cards, false)};
 		stagePiles.push(newPile);
 		return true;
 	}
 
 	var pileRank = 0;
-	var unlockedPiles = {locked : false, rankValue : 0, cards: [], calculateScore(this.cards, false)};
-	var lockedPiles = {locked: true, rankValue: 0, cards: [], calculateScore(this.cards, false)};
+	var unlockedPiles = {locked : false, rankValue : 0, cards: [], score: calculateScore(this.cards, false)};
+	var lockedPiles = {locked: true, rankValue: 0, cards: [], score: calculateScore(this.cards, false)};
 	for (i=0; i < selectedPiles.length; i++) {
 		var currentPile = stagePiles[selectedPiles[i]];
 
@@ -276,7 +276,10 @@ function containsHighCard(cards) {
 }
 
 function calculateScore(cards, endgame) {
+	if (!cards)
+		return 0;
 	var score = 0;
+	console.log(cards);
 	for (i=0; i < cards.length; i++) {
 		if (cards[i].suit == 1) {
 			score += cards[i].rank;
