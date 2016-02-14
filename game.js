@@ -184,7 +184,7 @@ function makePile(handCard, selectedPiles) {
 				lockedPiles = currentPile;
 			} else {
 				if (lockedPiles.rankValue != currentPile.rankValue) {
-					errormessage = ""
+					errormessage = "Cannot combine a locked pile with another pile which is not the same";
 					return false;
 				}
 				lockedPiles.cards = lockedPiles.cards.concat(currentPile.cards);
@@ -211,14 +211,17 @@ function makePile(handCard, selectedPiles) {
 			unlockedPiles.rankValue = i;
 			break;
 		}
-		if (i==13)
+		if (i==13) {
+			errormessage = "Cannot make a pile out of the bounds from 9 to King";
 			return false;
+		}
 	}
 
 	console.log("1unlocked piles rank value : " + unlockedPiles.rankValue);
 	if (pileRank == 0) {
 		pileRank = unlockedPiles.rankValue;
 	} else if (pileRank != unlockedPiles.rankValue) {
+		errormessage = "Cannot combine a locked pile with another pile which is not the same";
 		return false;
 	}
 
@@ -232,11 +235,15 @@ function makePile(handCard, selectedPiles) {
 			count++;
 	}
 
-	if (pileRank == handCard.rank && count < 2)
+	if (pileRank == handCard.rank && count < 2) {
+		errormessage = "Cannot make a pile of this rank without at least one of such card in hand";
 		return false;
+	}
 
-	if (pileRank != handCard.rank && count < 1)
+	if (pileRank != handCard.rank && count < 1) {
+		errormessage = "Cannot make a pile of this rank without at least one of such card in hand";
 		return false;
+	}
 
 
 	var finalPile = lockedPiles;
@@ -290,6 +297,10 @@ function pickUpPile(handCard, selectedPiles) {
 	}
 
 	if (sumOfCards > handCard.rank) {
+		if (handCard.rank <=8) {
+			errormessage = "Cannot pickup selected cards with the card selected";
+			return false;
+		}
 		if (sumOfCards % handCard.rank != 0) {
 			errormessage = "The selected cards cannot make a pile according to the hand card selected";
 			return false;
@@ -345,7 +356,9 @@ function calculateScore(cards, endgame) {
 		if (cards[i].suit == 1) {
 			score += cards[i].rank;
 		} else if (cards[i].suit == 3) {
-			score += cards[i].rank == 1 || cards[i].rank == 10 ? cards[i].rank : 0;
+			if (cards[i].rank == 10)
+				score += 2;
+			score += cards[i].rank == 1 ? cards[i].rank : 0;
 		} else if (cards[i].rank == 1) {
 			score++;
 		}
