@@ -80,20 +80,14 @@ function submitMove(pickUpPileBool) {
 	// console.log("first selected target index: " + firstTurnSelectedCard);
 	if (turn == 1) {
 		if (firstTurn($($('#hand .selected')).data().index, firstTurnSelectedCard, selectedPiles(), pickUpPileBool)) {
-			console.log("it worked");
-			$('.selected').removeClass("selected");
-			$('.button').hide();
-			showCards();
+			nextPlayer();
 		} else {
 			console.log("it didn't work");
 			alert('something went wrong. try again');
 		}		
 	} else {
 		if (anyTurn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
-			console.log("it worked");
-			$('.selected').removeClass("selected");
-			$('.button').hide();
-			showCards();
+			nextPlayer();
 		} else {
 			console.log("it didn't work");
 			alert('something went wrong. try again');
@@ -101,11 +95,28 @@ function submitMove(pickUpPileBool) {
 	}
 }
 
+function nextPlayer() {
+	// setTimeout(function(){ nextPlayer(); }, 1000);
+	console.log("it worked");
+	$('.selected').removeClass("selected");
+	$('.button').hide();
+	showCards();
+	$('#hand').addClass('hidden');
+	$('#nextPlayer').show();
+}
+
+function confirmPlayer() {
+	$('#nextPlayer').hide();
+	$('#hand').removeClass('hidden');	
+}
+
 function clickCard(event) {
     console.log($(event.target).data());
 	if ($(event.target).parent('#hand').length) {
-		$('#hand .selected').removeClass("selected");
-		$(event.target).addClass("selected");
+		if (! $(event.target).parent('#hand').hasClass('hidden')) {
+			$('#hand .selected').removeClass("selected");
+			$(event.target).addClass("selected");
+		}
 	} else {
 		$(event.target).toggleClass("selected");
 	}
