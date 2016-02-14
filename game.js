@@ -10,6 +10,7 @@ var tempStage = [];
 var topCard = 0;
 var turn = 1;
 var lastPickup = 0;
+var errormessage = "";
 
 function getStagePiles() {
 	return stagePiles;
@@ -117,8 +118,10 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 
 	sumOfCards += handCard.rank;
 	if (!pickUp) {
-		if (sumOfCards % PFCards[targetRankIndex].rank != 0)
+		if (sumOfCards % PFCards[targetRankIndex].rank != 0) {
+			errormessage = "The selected cards cannot make a pile according to the target selected";
 			return false
+		}
 		makePile(handCard, selectedPiles);
 	}
 	else if (!pickUpPile(handCard, selectedPiles)) {
@@ -180,8 +183,10 @@ function makePile(handCard, selectedPiles) {
 			if (lockedPiles.cards.length == 0) {
 				lockedPiles = currentPile;
 			} else {
-				if (lockedPiles.rankValue != currentPile.rankValue)
+				if (lockedPiles.rankValue != currentPile.rankValue) {
+					errormessage = ""
 					return false;
+				}
 				lockedPiles.cards = lockedPiles.cards.concat(currentPile.cards);
 			}
 		}
@@ -285,10 +290,14 @@ function pickUpPile(handCard, selectedPiles) {
 	}
 
 	if (sumOfCards > handCard.rank) {
-		if (sumOfCards % handCard.rank != 0)
+		if (sumOfCards % handCard.rank != 0) {
+			errormessage = "The selected cards cannot make a pile according to the hand card selected";
 			return false;
-	} else if (sumOfCards < handCard.rank)
+		}
+	} else if (sumOfCards < handCard.rank) {
+		errormessage = "The selected cards do not add up to the card selected.";
 		return false;
+	}
 
 
 	for (i=selectedPiles.length - 1; i>=0; i--) {
