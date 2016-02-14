@@ -2,6 +2,7 @@
 <head>
   <meta name="viewport" content="width=device-width" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href='https://fonts.googleapis.com/css?family=Quicksand:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="style.css"/>
   <script src="jquery-1.11.3.js"></script>
   <script src="game.js"></script>
@@ -9,13 +10,12 @@
   <title>Sweep</title>
 </head>
 <body>
-  <h2>Stage</h2>
   <div id="stage"></div>
-  <h2>Hand</h2>
   <div id="hand"></div>
-  <br>
-  <div class="button" id="pileBtn" onclick="submitMove(false)">Make Pile</div>
-  <div class="button" id="pickBtn" onclick="submitMove(true)">Pick Up Pile</div>
-  <div class="button" id="selectBtn">Select Card</div>
+  <div id="action">
+    <div class="button" id="pileBtn" onclick="submitMove(false)">Make Pile</div>
+    <div class="button" id="pickBtn" onclick="submitMove(true)">Pick Up Pile</div>
+    <div class="button" id="selectBtn">Select Card</div>
+  </div>
 </body>
 </html>
