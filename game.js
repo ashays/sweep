@@ -9,6 +9,7 @@ var stagePiles = [];
 var tempStage = [];
 var topCard = 0;
 var turn = 1;
+var lastPickup = 0;
 
 function getStagePiles() {
 	return stagePiles;
@@ -292,10 +293,12 @@ function pickUpPile(handCard, selectedPiles) {
 		sweep = true;
 
 	if (turn %2 == 1) {
+		lastPickup = 1;
 		if (sweep)
 			PFPile.push({rank: 50, suit: 1});
 		PFPile.push(handCard);
 	} else {
+		lastPickup = 2;
 		if (sweep)
 			PSPile.push({rank: 50, suit: 1});
 		PSPile.push(handCard);
@@ -331,4 +334,17 @@ function calculateScore(cards, endgame) {
 		score += cards.length > 26 ? 4 : cards.length == 26 ? 2 : 0;
 	}
 	return score;
+}
+
+
+function endgame() {
+	if (lastPickup == 1) {
+		while (stagePiles.length != 0) {
+			PFPile = PFPile.concat(stagePiles[0].cards);
+			stagePiles.splice(0, 1);
+		}
+	} else while (stagePiles.length != 0) {
+		PSPile = PSPile.concat(stagePiles[0].cards);
+		stagePiles.splice(0, 1);
+	}
 }
