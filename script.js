@@ -54,7 +54,11 @@ var rankName = function(rankVal) {
 
 function showCards() {
 	console.log("Player " + turn % 2 + "'s turn");
+	$('.player').removeClass('current');
+	$('#player' + turn % 2).addClass('current');
 	$('#stage').empty();
+	$('#player1 .score').text(calculateScore(PFPile, false));
+	$('#player0 .score').text(calculateScore(PSPile, false));
 	for (var i = 0; i < stagePiles.length; i++) {
 		if (stagePiles[i].cards.length == 1) {
 			$('#stage').append(cardEle(stagePiles[i].cards[0].rank, stagePiles[i].cards[0].suit, i));
