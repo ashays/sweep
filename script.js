@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 	showCards();
 	$('.button').hide();
-	$('#stage').hide();
+	$('#stage').addClass('hidden');
 
 	$('#selectBtn').click(function(event) {
 		// Check if a card is selected
@@ -18,7 +18,7 @@ $(document).ready(function() {
 			console.log('ERROR');
 		} else {
 			firstTurnSelectedCard = $('#hand .selected').data().index;
-			$('#stage').show();
+			$('#stage').removeClass('hidden');
 			$('#hand .selected').removeClass("selected");
 			$('#selectBtn').hide();
 			console.log(firstTurnSelectedCard);
@@ -107,7 +107,9 @@ function clickCard(event) {
 		$(event.target).toggleClass("selected");
 	}
 	if (turn == 1 && firstTurnSelectedCard < 0) {
-		if (PFCards[$(event.target).data().index].rank >= 9) {
+		if (! $(event.target).parent('#hand').length) {
+			$('.selected').removeClass("selected");
+		} else if (PFCards[$(event.target).data().index].rank >= 9) {
 			$('#selectBtn').show();
 		} else {
 			$('#selectBtn').hide();

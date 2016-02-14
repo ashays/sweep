@@ -66,6 +66,13 @@ body {
     opacity: 1;
 }
 
+
+.hidden .card {
+    color: transparent;
+    background: url('img/pattern.png');
+    opacity: 1;
+}
+
 .button {
     display: inline-block;
     background: #FFF;
