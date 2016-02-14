@@ -91,7 +91,11 @@ function submitMove(pickUpPileBool) {
 		}		
 	} else {
 		if (anyTurn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
-			nextPlayer();
+			if (turn < 48) {
+				nextPlayer();				
+			} else {
+				gameOver();
+			}
 		} else {
 			console.log("it didn't work");
 			alert('something went wrong. try again');
@@ -107,6 +111,12 @@ function nextPlayer() {
 	showCards();
 	$('#hand').addClass('hidden');
 	$('#nextPlayer').show();
+}
+
+function gameOver() {
+	endgame();
+	$('#player1 .score').text(calculateScore(PFPile, true));
+	$('#player0 .score').text(calculateScore(PSPile, true));
 }
 
 function confirmPlayer() {
