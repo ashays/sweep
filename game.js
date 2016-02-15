@@ -117,11 +117,13 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 	}
 
 	sumOfCards += handCard.rank;
+
+	if (sumOfCards % PFCards[targetRankIndex].rank != 0) {
+		errormessage = "The selected cards cannot make or pick a pile according to the target chosen";
+		return false
+	}
+
 	if (!pickUp) {
-		if (sumOfCards % PFCards[targetRankIndex].rank != 0) {
-			errormessage = "The selected cards cannot make a pile according to the target selected";
-			return false
-		}
 		makePile(handCard, selectedPiles);
 	}
 	else if (!pickUpPile(handCard, selectedPiles)) {
@@ -320,7 +322,7 @@ function pickUpPile(handCard, selectedPiles) {
 		stagePiles.splice(selectedPiles[i], 1);
 	}
 
-	if (stagePiles.length == 0)
+	if (stagePiles.length == 0 && turn < 49)
 		sweep = true;
 
 	if (turn %2 == 1) {
