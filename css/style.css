@@ -74,6 +74,15 @@ body {
     opacity: 1;
 }
 
+.hidden .card:after {
+    content: 'sweep';
+    color: rgba(255, 255, 255,.5);
+    position: absolute;
+    font-size: 16px;
+    left: 0;
+    width: 100%;
+}
+
 .button {
     display: inline-block;
     background: #FFF;
