@@ -117,11 +117,13 @@ function firstTurn(selectedCard, targetRankIndex, selectedPiles, pickUp) {
 	}
 
 	sumOfCards += handCard.rank;
+
+	if (sumOfCards % PFCards[targetRankIndex].rank != 0) {
+		errormessage = "The selected cards cannot make or pick a pile according to the target chosen";
+		return false
+	}
+
 	if (!pickUp) {
-		if (sumOfCards % PFCards[targetRankIndex].rank != 0) {
-			errormessage = "The selected cards cannot make a pile according to the target selected";
-			return false
-		}
 		makePile(handCard, selectedPiles);
 	}
 	else if (!pickUpPile(handCard, selectedPiles)) {
@@ -164,6 +166,7 @@ function anyTurn(selectedCard, selectedPiles, pickUp) {
 }
 
 function makePile(handCard, selectedPiles) {
+	//Case for when you're throwing down a single card for a new pile
 	if (selectedPiles.length == 0) {
 		var newPile = {locked : handCard.rank == 13 ? true : false, rankValue: handCard.rank, cards: [handCard]};
 		stagePiles.push(newPile);
@@ -261,25 +264,35 @@ function makePile(handCard, selectedPiles) {
 
 
 	var destinationPile = selectedPiles[0];
-	/*for (i=1; i<selectedPiles.length; i++) {
-		var currentPile = stagePiles[selectedPiles[i]];
-
-		if (!stagePiles[destinationPile].locked)
-			stagePiles[destinationPile].rankValue = currentPile.locked ? currentPile.rankValue : 
-				stagePiles[destinationPile].rankValue + currentPile.rankValue;
-		
-		for (j=0; j < currentPile.cards.length; j++) {
-			stagePiles[destinationPile].cards.push(currentPile.cards[j]);
-		}
-	}*/
 	for (i=selectedPiles.length - 1; i > 0; i--) {
 		stagePiles.splice(selectedPiles[i], 1);
 	}
-	/*stagePiles[destinationPile].cards.push(handCard);
-	if (stagePiles[destinationPile].rankValue != handCard.rank)
-		stagePiles[destinationPile].rankValue += handCard.rank;
-	*/
 	stagePiles[destinationPile] = finalPile;
+
+
+	//Combines piles on the stage which have the same rank and have multiple cards.
+	for (i=0; i<stagePiles.length; i++) {
+		var toCombinePiles = [];
+		if (stagePiles[i].cards.length > 1) {
+			for (var j=i+1; j< stagePiles.length; j++) {
+				if (stagePiles[j].rankValue == stagePiles[i].rankValue && stagePiles[j].cards.length > 1) {
+					toCombinePiles.push(j);
+				}
+			}
+			if (toCombinePiles.length > 0) {
+				toCombinePiles.push(i);
+				break;
+			}
+		}		
+	}
+	if (toCombinePiles.length > 0) {
+		for (i=0; i<toCombinePiles.length - 1; i++) {
+			stagePiles[toCombinePiles[toCombinePiles.length - 1]].cards
+			= stagePiles[toCombinePiles[toCombinePiles.length - 1]].cards.concat(stagePiles[toCombinePiles[i]].cards);
+			stagePiles.splice(toCombinePiles[i], 1);
+		}
+	}
+
 	return true;
 }
 
@@ -320,7 +333,7 @@ function pickUpPile(handCard, selectedPiles) {
 		stagePiles.splice(selectedPiles[i], 1);
 	}
 
-	if (stagePiles.length == 0)
+	if (stagePiles.length == 0 && turn < 49)
 		sweep = true;
 
 	if (turn %2 == 1) {

@@ -87,7 +87,7 @@ function submitMove(pickUpPileBool) {
 		}		
 	} else {
 		if (anyTurn($($('#hand .selected')).data().index, selectedPiles(), pickUpPileBool)) {
-			if (turn < 48) {
+			if (turn < 49) {
 				nextPlayer();				
 			} else {
 				gameOver();
